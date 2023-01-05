@@ -6,7 +6,10 @@ Esse é um código backend para uma API que calcula o IMC. Ele faz parte de um t
 
 Ao inputar o peso e altura (pode ser feito pelo ./spec/requests/api_spec.rb), o código usa uma calculadora para retornar o valor do IMC,  a classificação e o índice do mesmo.
 
-A partir da implementação do front com um form de input dos dados ou um seed com um banco de dados, será necessário apenas chamar o método "bmi_calculate".
+Outra possibilidade de teste é o Postman, a partir do url 'localhost:3000/imc'
+Obs: Para esse teste utilizei um token destinado ao exercício.
+
+A partir da implementação do front com um form de input dos dados ou um seed com um banco de dados, será necessário apenas chamar o método "bmi_calculate". E vale ressaltar que essa API está programada para retornar JSON.
 
 # Sobre o funcionamento do jogo dentro do código:
 
