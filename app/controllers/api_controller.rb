@@ -1,14 +1,15 @@
+require 'jwt'
+
 class ApiController < ApplicationController
-  before_action :authenticate_request
+  before_action :authenticate
+  skip_before_action :verify_authenticity_token
 
   def calculate_bmi
-    # Parse para o form data // No momento os dados estão no teste que está no spec
-    form_data = Rack::Utils.parse_nested_query(request.raw_post)
-    height = form_data['height'].to_f
-    weight = form_data['weight'].to_f
+    height = params['height'].to_f
+    weight = params['weight'].to_f
 
     # Calcula o IMC
-    bmi = (weight / (height ** 2)).round(1)
+    bmi = (weight / (height**2)).round(1)
 
     # Determina a qualificação do imc e o nível da obesidade
     classification = determine_classification(bmi)
@@ -17,6 +18,8 @@ class ApiController < ApplicationController
     # Retorna o IMC (classificação e nível)
     render json: { imc: bmi, classification: classification, obesity: obesity }
   end
+
+  private
 
   def determine_classification(bmi)
     if bmi < 18.5
@@ -40,11 +43,16 @@ class ApiController < ApplicationController
     end
   end
 
-  private
-
-  def authenticate_request
-    # Decode and verify JWT token in request header
-    # If the token is valid, set @current_user to the decoded user payload
-    # If the token is invalid, raise an exception
+  def authenticate
+    if request.headers["Authorization"].present?
+      token = request.headers["Authorization"].split(" ").last
+      begin
+        JWT.decode(token,  ENV['JWT_SECRET_KEY'])
+      rescue JWT::DecodeError
+        render json: { error: "Invalid token" }, status: :unauthorized
+      end
+    else
+      render json: { error: "Token not found" }, status: :unauthorized
+    end
   end
 end

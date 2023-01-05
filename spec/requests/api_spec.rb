@@ -3,8 +3,15 @@ require 'rails_helper'
 RSpec.describe 'IMC API', type: :request do
   describe 'POST /imc' do
     it 'calculates the BMI and returns the classification and obesity level' do
+      # Generate a JWT token
+      secret_key = ENV['JWT_SECRET_KEY']
+      token = JWT.encode({ user_id: 1 }, secret_key)
+
+      # Set the Authorization header with the JWT token
+      headers = { 'Authorization': "Bearer #{token}" }
+
       # Send a POST request to the /imc endpoint with the height and weight
-      post '/imc', params: { height: 1.70, weight: 76 }
+      post '/imc', params: { height: 1.70, weight: 76 }, headers: headers
 
       # Expect the response status code to be 200
       expect(response).to have_http_status(200)

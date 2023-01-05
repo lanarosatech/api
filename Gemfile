@@ -71,4 +71,11 @@ group :test do
   gem "webdrivers"
 end
 
+# gem para o teste
 gem 'rspec-rails'
+
+# token
+gem 'jwt'
+
+# criando env para fazer o token
+gem 'dotenv-rails', :groups => [:development, :test]
