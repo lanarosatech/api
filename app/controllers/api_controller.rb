@@ -2,19 +2,19 @@ class ApiController < ApplicationController
   before_action :authenticate_request
 
   def calculate_bmi
-    # Parse the form data and extract the height and weight
+    # Parse para o form data // No momento os dados estão no teste que está no spec
     form_data = Rack::Utils.parse_nested_query(request.raw_post)
     height = form_data['height'].to_f
     weight = form_data['weight'].to_f
 
-    # Calculate the BMI
+    # Calcula o IMC
     bmi = (weight / (height ** 2)).round(1)
 
-    # Determine the classification and obesity level
+    # Determina a qualificação do imc e o nível da obesidade
     classification = determine_classification(bmi)
     obesity = determine_obesity(bmi)
 
-    # Return BMI, classification, and obesity level in response body
+    # Retorna o IMC (classificação e nível)
     render json: { imc: bmi, classification: classification, obesity: obesity }
   end
 
